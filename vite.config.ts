@@ -4,8 +4,8 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 export default defineConfig(({ mode }) => ({
-  // DYNAMIC BASE PATH: Fixes both Lovable Preview and GitHub Pages
-  base: mode === 'production' ? '/arizona-nutrition-aid/' : '/',
+  // STATIC RELATIVE BASE: Portable across any host (manual deploy)
+  base: './',
   server: {
     host: "::",
     port: 8080,
