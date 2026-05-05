@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Check, Copy } from "lucide-react";
 import { toast } from "sonner";
+import { isFiberAdequate, ibwCategory, SSoT } from "@/lib/clinicalStandards";
 
 interface Props {
   sex: "male" | "female";
@@ -68,12 +69,8 @@ and documentation in the patient's medical record.
 function buildNote(p: Props): string {
   const today = new Date().toISOString().slice(0, 10);
   const fiberDeficit = p.recommendedFiber - p.fiberG;
-  const fiberAdequate = p.recommendedFiber > 0 && p.fiberG >= p.recommendedFiber * 0.9;
-  const ibwStatus =
-    !p.pctIBW ? "pending"
-    : p.pctIBW < 90 ? "underweight"
-    : p.pctIBW <= 110 ? "within IBW range"
-    : p.pctIBW <= 120 ? "overweight" : "obese";
+  const fiberAdequate = isFiberAdequate(p.fiberG, p.recommendedFiber);
+  const ibwStatus = p.pctIBW ? ibwCategory(p.pctIBW).toLowerCase() : "pending";
 
   const A =
 `A — ASSESSMENT
@@ -90,8 +87,8 @@ function buildNote(p: Props): string {
     ? "  [Awaiting nutrient audit input to generate PES statement.]"
     : fiberAdequate
       ? `  No fiber-related nutrition diagnosis at this time.
-  Fiber intake meets DGA recommendation (14 g / 1000 kcal).`
-      : `  Inadequate fiber intake (NI-5.8.5) related to limited intake of
+  Fiber intake meets DGA recommendation (${SSoT.fiber.gramsPer1000Kcal} g / 1000 kcal).`
+      : `  ${SSoT.fiber.diagnosisLabel} (${SSoT.fiber.diagnosisCode}) related to limited intake of
   whole grains, fruits, vegetables, and legumes as evidenced by
   reported intake of ${p.fiberG.toFixed(1)} g/day vs. DGA-recommended
   ${p.recommendedFiber.toFixed(1)} g/day (deficit of ${fiberDeficit.toFixed(1)} g/day,

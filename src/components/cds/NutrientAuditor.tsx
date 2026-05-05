@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { recommendedFiberG, isFiberAdequate, SSoT } from "@/lib/clinicalStandards";
 
 interface Props {
   kcal: number; setKcal: (n: number) => void;
@@ -8,17 +9,17 @@ interface Props {
 }
 
 export function NutrientAuditor({ kcal, setKcal, fiberG, setFiberG }: Props) {
-  const recommended = useMemo(() => (kcal / 1000) * 14, [kcal]);
+  const recommended = useMemo(() => recommendedFiberG(kcal), [kcal]);
   const deficit = recommended - fiberG;
   const pct = recommended > 0 ? Math.min(100, (fiberG / recommended) * 100) : 0;
-  const adequate = recommended > 0 && fiberG >= recommended * 0.9;
+  const adequate = isFiberAdequate(fiberG, recommended);
 
   return (
     <section className="clinical-card" aria-labelledby="tier-2-heading">
       <header className="mb-4">
         <span className="tier-badge">TIER 02 / NUTRIENT AUDIT</span>
         <h2 id="tier-2-heading" className="text-xl md:text-2xl mt-2 text-navy">
-          Dietary Fiber — DGA 14g / 1000 kcal
+          Dietary Fiber — DGA {SSoT.fiber.gramsPer1000Kcal}g / 1000 kcal
         </h2>
       </header>
 

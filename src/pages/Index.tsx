@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { AssessmentBox, Sex, Unit } from "@/components/cds/AssessmentBox";
 import { NutrientAuditor } from "@/components/cds/NutrientAuditor";
 import { AdimeBox } from "@/components/cds/AdimeBox";
+import { hamwiIbwLb, recommendedFiberG } from "@/lib/clinicalStandards";
 
 const Index = () => {
   const [unit, setUnit] = useState<Unit>("imperial");
@@ -11,14 +12,9 @@ const Index = () => {
   const [kcal, setKcal] = useState(2000);
   const [fiberG, setFiberG] = useState(15);
 
-  const ibwLb = useMemo(() => {
-    if (heightIn < 60) return 0;
-    const over = heightIn - 60;
-    return sex === "male" ? 106 + 6 * over : 100 + 5 * over;
-  }, [heightIn, sex]);
-
+  const ibwLb = useMemo(() => hamwiIbwLb(sex, heightIn), [heightIn, sex]);
   const pctIBW = ibwLb && actualLb ? (actualLb / ibwLb) * 100 : 0;
-  const recommendedFiber = (kcal / 1000) * 14;
+  const recommendedFiber = useMemo(() => recommendedFiberG(kcal), [kcal]);
 
   return (
     <div className="min-h-screen bg-background">
