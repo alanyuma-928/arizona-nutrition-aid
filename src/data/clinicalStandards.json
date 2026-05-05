@@ -1,0 +1,31 @@
+{
+  "$schema": "SSoT for Arizona Nutrition Aid CDS",
+  "version": "1.0.0",
+  "sources": {
+    "hamwi": "Hamwi GJ. Therapeutic approach. In: Diabetes Mellitus: Diagnosis and Treatment. ADA, 1964.",
+    "dga": "U.S. Dept. of Agriculture & U.S. Dept. of Health and Human Services. Dietary Guidelines for Americans, 2020-2025. 9th Ed."
+  },
+  "hamwi": {
+    "baseHeightIn": 60,
+    "male":   { "baseLb": 106, "lbPerInchOver": 6 },
+    "female": { "baseLb": 100, "lbPerInchOver": 5 },
+    "ibwRange": { "lowPct": 90, "highPct": 110 },
+    "categories": [
+      { "label": "SEVERELY UNDERWEIGHT", "maxPct": 80 },
+      { "label": "UNDERWEIGHT",          "maxPct": 90 },
+      { "label": "WITHIN IBW RANGE",     "maxPct": 110 },
+      { "label": "OVERWEIGHT",           "maxPct": 120 },
+      { "label": "OBESE",                "maxPct": null }
+    ]
+  },
+  "fiber": {
+    "gramsPer1000Kcal": 14,
+    "adequacyThresholdPct": 90,
+    "diagnosisCode": "NI-5.8.5",
+    "diagnosisLabel": "Inadequate fiber intake"
+  },
+  "conversions": {
+    "lbPerKg": 2.20462,
+    "cmPerIn": 2.54
+  }
+}
