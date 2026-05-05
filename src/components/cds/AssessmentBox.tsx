@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { hamwiIbwLb, ibwCategory, SSoT } from "@/lib/clinicalStandards";
 
 export type Sex = "male" | "female";
 export type Unit = "imperial" | "metric";
@@ -14,27 +15,19 @@ interface Props {
 }
 
 export function AssessmentBox(p: Props) {
-  const ibwLb = useMemo(() => {
-    if (p.heightIn < 60) return 0;
-    const inchesOver = p.heightIn - 60;
-    return p.sex === "male" ? 106 + 6 * inchesOver : 100 + 5 * inchesOver;
-  }, [p.heightIn, p.sex]);
+  const ibwLb = useMemo(() => hamwiIbwLb(p.sex, p.heightIn), [p.heightIn, p.sex]);
 
   const pctIBW = p.actualLb && ibwLb ? (p.actualLb / ibwLb) * 100 : 0;
-  const ibwKg = ibwLb * 0.453592;
-  const status =
-    pctIBW === 0 ? "—" :
-    pctIBW < 80 ? "SEVERELY UNDERWEIGHT" :
-    pctIBW < 90 ? "UNDERWEIGHT" :
-    pctIBW <= 110 ? "WITHIN IBW RANGE" :
-    pctIBW <= 120 ? "OVERWEIGHT" : "OBESE";
+  const ibwKg = ibwLb / SSoT.conversions.lbPerKg;
+  const status = ibwCategory(pctIBW);
 
+  const { lowPct, highPct } = SSoT.hamwi.ibwRange;
   const statusColor = pctIBW === 0 ? "text-muted-foreground"
-    : (pctIBW < 90 || pctIBW > 110) ? "text-red" : "text-navy";
+    : (pctIBW < lowPct || pctIBW > highPct) ? "text-red" : "text-navy";
 
   // local UI helpers for metric inputs
-  const [cm, setCm] = useState<string>(() => (p.heightIn * 2.54).toFixed(0));
-  const [kg, setKg] = useState<string>(() => (p.actualLb * 0.453592).toFixed(1));
+  const [cm, setCm] = useState<string>(() => (p.heightIn * SSoT.conversions.cmPerIn).toFixed(0));
+  const [kg, setKg] = useState<string>(() => (p.actualLb / SSoT.conversions.lbPerKg).toFixed(1));
 
   return (
     <section className="clinical-card" aria-labelledby="tier-1-heading">

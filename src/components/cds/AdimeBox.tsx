@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Check, Copy } from "lucide-react";
 import { toast } from "sonner";
+import { isFiberAdequate, ibwCategory, SSoT } from "@/lib/clinicalStandards";
 
 interface Props {
   sex: "male" | "female";
