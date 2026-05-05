@@ -30,7 +30,7 @@ Truth (SSoT) references — Dietary Guidelines for
 Americans & Hamwi Method — prior to clinical use.
 The credentialed user (RDN/clinician) is solely
 responsible for final verification, interpretation,
-and documentation in the patient medical record.
+and documentation in the patient's medical record.
 -----------------------------------------------------`;
     await navigator.clipboard.writeText(`${note}\n\n${disclaimer}`);
     setCopied(true);
