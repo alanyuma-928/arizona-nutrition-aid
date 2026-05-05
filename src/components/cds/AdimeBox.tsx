@@ -69,12 +69,8 @@ and documentation in the patient's medical record.
 function buildNote(p: Props): string {
   const today = new Date().toISOString().slice(0, 10);
   const fiberDeficit = p.recommendedFiber - p.fiberG;
-  const fiberAdequate = p.recommendedFiber > 0 && p.fiberG >= p.recommendedFiber * 0.9;
-  const ibwStatus =
-    !p.pctIBW ? "pending"
-    : p.pctIBW < 90 ? "underweight"
-    : p.pctIBW <= 110 ? "within IBW range"
-    : p.pctIBW <= 120 ? "overweight" : "obese";
+  const fiberAdequate = isFiberAdequate(p.fiberG, p.recommendedFiber);
+  const ibwStatus = p.pctIBW ? ibwCategory(p.pctIBW).toLowerCase() : "pending";
 
   const A =
 `A — ASSESSMENT
