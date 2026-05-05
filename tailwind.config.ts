@@ -13,7 +13,14 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        mono: ['"Space Mono"', 'ui-monospace', 'monospace'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+      },
       colors: {
+        navy: "hsl(var(--navy))",
+        red: "hsl(var(--red))",
+        creme: "hsl(var(--creme))",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
