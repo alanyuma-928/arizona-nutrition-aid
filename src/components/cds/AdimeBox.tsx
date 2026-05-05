@@ -87,8 +87,8 @@ function buildNote(p: Props): string {
     ? "  [Awaiting nutrient audit input to generate PES statement.]"
     : fiberAdequate
       ? `  No fiber-related nutrition diagnosis at this time.
-  Fiber intake meets DGA recommendation (14 g / 1000 kcal).`
-      : `  Inadequate fiber intake (NI-5.8.5) related to limited intake of
+  Fiber intake meets DGA recommendation (${SSoT.fiber.gramsPer1000Kcal} g / 1000 kcal).`
+      : `  ${SSoT.fiber.diagnosisLabel} (${SSoT.fiber.diagnosisCode}) related to limited intake of
   whole grains, fruits, vegetables, and legumes as evidenced by
   reported intake of ${p.fiberG.toFixed(1)} g/day vs. DGA-recommended
   ${p.recommendedFiber.toFixed(1)} g/day (deficit of ${fiberDeficit.toFixed(1)} g/day,
