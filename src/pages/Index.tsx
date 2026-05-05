@@ -1,16 +1,75 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useMemo, useState } from "react";
+import { AssessmentBox, Sex, Unit } from "@/components/cds/AssessmentBox";
+import { NutrientAuditor } from "@/components/cds/NutrientAuditor";
+import { AdimeBox } from "@/components/cds/AdimeBox";
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
+const Index = () => {
+  const [unit, setUnit] = useState<Unit>("imperial");
+  const [sex, setSex] = useState<Sex>("female");
+  const [heightIn, setHeightIn] = useState(65);
+  const [actualLb, setActualLb] = useState(140);
+  const [kcal, setKcal] = useState(2000);
+  const [fiberG, setFiberG] = useState(15);
+
+  const ibwLb = useMemo(() => {
+    if (heightIn < 60) return 0;
+    const over = heightIn - 60;
+    return sex === "male" ? 106 + 6 * over : 100 + 5 * over;
+  }, [heightIn, sex]);
+
+  const pctIBW = ibwLb && actualLb ? (actualLb / ibwLb) * 100 : 0;
+  const recommendedFiber = (kcal / 1000) * 14;
+
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
+    <div className="min-h-screen bg-background">
+      <header className="border-b-2 border-navy bg-creme">
+        <div className="max-w-5xl mx-auto px-4 md:px-6 py-5 flex items-center gap-4">
+          <div className="w-11 h-11 bg-navy text-creme grid place-items-center font-mono font-bold text-lg rounded-sm shrink-0">
+            UA
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="label-mono">Nutritional Sciences & Wellness Foods Lab</p>
+            <h1 className="text-lg md:text-2xl font-extrabold text-navy leading-tight truncate">
+              Clinical Decision Support
+            </h1>
+          </div>
+          <span className="hidden sm:inline-flex font-mono text-[10px] font-bold uppercase
+                           tracking-widest bg-red text-creme px-2 py-1 rounded-sm">
+            v1.0 / CDS
+          </span>
+        </div>
+      </header>
+
+      <main className="max-w-5xl mx-auto px-4 md:px-6 py-6 md:py-8 space-y-5 md:space-y-6">
+        <AssessmentBox
+          sex={sex} setSex={setSex}
+          unit={unit} setUnit={setUnit}
+          heightIn={heightIn} setHeightIn={setHeightIn}
+          actualLb={actualLb} setActualLb={setActualLb}
+        />
+        <NutrientAuditor
+          kcal={kcal} setKcal={setKcal}
+          fiberG={fiberG} setFiberG={setFiberG}
+        />
+        <AdimeBox
+          sex={sex}
+          heightIn={heightIn}
+          actualLb={actualLb}
+          ibwLb={ibwLb}
+          pctIBW={pctIBW}
+          kcal={kcal}
+          fiberG={fiberG}
+          recommendedFiber={recommendedFiber}
+        />
+
+        <footer className="pt-4 pb-8 text-center">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+            // For educational use · Not a substitute for clinical judgment
+          </p>
+        </footer>
+      </main>
     </div>
   );
 };
-
-const Index = PlaceholderIndex;
 
 export default Index;
