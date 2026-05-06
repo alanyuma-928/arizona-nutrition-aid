@@ -4,6 +4,7 @@ import { NutrientAuditor } from "@/components/cds/NutrientAuditor";
 import { AdimeBox } from "@/components/cds/AdimeBox";
 import { AdimeNoteBuilder } from "@/components/cds/AdimeNoteBuilder";
 import { PagaAuditor, PagaState } from "@/components/cds/PagaAuditor";
+import { UserGuide } from "@/components/cds/UserGuide";
 import { hamwiIbwLb, recommendedFiberG } from "@/lib/clinicalStandards";
 import { usePersistentState, CDS_STORAGE_PREFIX, clearCdsStorage } from "@/lib/usePersistentState";
 import { Button } from "@/components/ui/button";
@@ -48,10 +49,13 @@ const Index = () => {
               Clinical Decision Support
             </h1>
           </div>
-          <span className="hidden sm:inline-flex font-mono text-[10px] font-bold uppercase
-                           tracking-widest bg-red text-creme px-2 py-1 rounded-sm">
-            v1.0 / CDS
-          </span>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="hidden sm:inline-flex font-mono text-[10px] font-bold uppercase
+                             tracking-widest bg-red text-creme px-2 py-1 rounded-sm">
+              v1.0 / CDS
+            </span>
+            <UserGuide />
+          </div>
         </div>
       </header>
 
