@@ -7,9 +7,10 @@ import { Check, Copy, Download, FileText, Plus, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { ibwCategory, isFiberAdequate, SSoT } from "@/lib/clinicalStandards";
 import { PesGenerator } from "./PesGenerator";
+import { ClientEducation } from "./ClientEducation";
 import type { PagaState } from "./PagaAuditor";
 
-type TabKey = "A" | "D" | "I" | "M" | "E";
+type TabKey = "A" | "D" | "I" | "M" | "E" | "C";
 
 interface Props {
   sex: "male" | "female";
@@ -33,6 +34,7 @@ const TABS: { key: TabKey; label: string; full: string }[] = [
   { key: "I", label: "I", full: "Intervention" },
   { key: "M", label: "M", full: "Monitoring" },
   { key: "E", label: "E", full: "Evaluation" },
+  { key: "C", label: "C", full: "Client Ed" },
 ];
 
 interface Suggestion { id: string; text: string; }
@@ -212,7 +214,7 @@ and documentation in the patient's medical record.
 
         <article className="p-5 md:p-6">
           <Tabs value={tab} onValueChange={v => setTab(v as TabKey)}>
-            <TabsList className="grid grid-cols-5 w-full h-auto bg-navy/10 p-1 rounded-sm">
+            <TabsList className="grid grid-cols-6 w-full h-auto bg-navy/10 p-1 rounded-sm">
               {TABS.map(t => (
                 <TabsTrigger
                   key={t.key}
@@ -326,6 +328,15 @@ and documentation in the patient's medical record.
                 onChange={e => setEvaluation(e.target.value)}
                 placeholder="Narrator: Compare current indicators against baseline and goals. Document progress (resolved, improving, no change, regressed) and rationale for continuing, modifying, or discontinuing the nutrition intervention."
                 className="min-h-[220px] font-mono text-sm bg-card text-navy border-2 border-navy/30 focus-visible:border-navy placeholder:text-navy/55"
+              />
+            </TabsContent>
+
+            {/* CLIENT EDUCATION */}
+            <TabsContent value="C" className="mt-5">
+              <ClientEducation
+                fiberG={p.fiberG}
+                recommendedFiber={p.recommendedFiber}
+                paga={p.paga}
               />
             </TabsContent>
           </Tabs>
