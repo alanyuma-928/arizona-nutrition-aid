@@ -1,11 +1,14 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Check, Copy, Download, FileText, Sparkles } from "lucide-react";
+import { Check, Copy, Download, FileText, Plus, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { ibwCategory, isFiberAdequate, SSoT } from "@/lib/clinicalStandards";
+import type { PagaState } from "./PagaAuditor";
+
+type TabKey = "A" | "D" | "I" | "M" | "E";
 
 interface Props {
   sex: "male" | "female";
@@ -16,9 +19,13 @@ interface Props {
   kcal: number;
   fiberG: number;
   recommendedFiber: number;
+  paga: PagaState;
+  /** Increment to programmatically open the dialog (e.g., from PAGA Export). */
+  openSignal?: number;
+  /** Tab to focus when openSignal changes. */
+  initialTab?: TabKey;
 }
 
-type TabKey = "A" | "D" | "I" | "M" | "E";
 const TABS: { key: TabKey; label: string; full: string }[] = [
   { key: "A", label: "A", full: "Assessment" },
   { key: "D", label: "D", full: "Diagnosis" },
@@ -26,6 +33,31 @@ const TABS: { key: TabKey; label: string; full: string }[] = [
   { key: "M", label: "M", full: "Monitoring" },
   { key: "E", label: "E", full: "Evaluation" },
 ];
+
+interface Suggestion { id: string; text: string; }
+
+function buildPagaSuggestions(paga: PagaState): Suggestion[] {
+  const out: Suggestion[] = [];
+  if (paga.activityMin < SSoT.paga.moderateMinPerWeek) {
+    out.push({
+      id: "low-activity",
+      text: `Prescribe a walking program starting at 10-minute bouts to reach the ${SSoT.paga.moderateMinPerWeek}-minute PAGA threshold.`,
+    });
+  }
+  if (paga.sedentaryHr > SSoT.paga.sedentaryMaxHoursPerDay) {
+    out.push({
+      id: "high-sedentary",
+      text: `Implement a "sit-stand" protocol or 5-minute movement breaks every hour.`,
+    });
+  }
+  if (paga.resistanceDays < SSoT.paga.resistanceMinDaysPerWeek) {
+    out.push({
+      id: "low-resistance",
+      text: `Introduce bodyweight or resistance band exercises targeting major muscle groups.`,
+    });
+  }
+  return out;
+}
 
 export function AdimeNoteBuilder(p: Props) {
   const [open, setOpen] = useState(false);
@@ -36,10 +68,26 @@ export function AdimeNoteBuilder(p: Props) {
   const [monitoring, setMonitoring] = useState("");
   const [evaluation, setEvaluation] = useState("");
   const [copied, setCopied] = useState(false);
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+
+  useEffect(() => {
+    if (p.openSignal && p.openSignal > 0) {
+      setSuggestions(buildPagaSuggestions(p.paga));
+      setTab(p.initialTab ?? "I");
+      setOpen(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [p.openSignal]);
 
   const ibwStatus = p.pctIBW ? ibwCategory(p.pctIBW) : "—";
   const fiberDeficit = p.recommendedFiber - p.fiberG;
   const adequate = isFiberAdequate(p.fiberG, p.recommendedFiber);
+
+  const addSuggestion = (s: Suggestion) => {
+    setIntervention(prev => (prev ? prev.replace(/\s+$/, "") + "\n" : "") + `• ${s.text}`);
+    setSuggestions(prev => prev.filter(x => x.id !== s.id));
+    toast.success("Suggestion added to Intervention");
+  };
 
   const importedAssessment = useMemo(() => {
     return [
