@@ -97,9 +97,17 @@ const Index = () => {
           />
         </div>
 
-        <footer className="pt-4 pb-8 text-center">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            // For educational use · Not a substitute for clinical judgment
+        <footer className="pt-4 pb-8 flex flex-col items-center gap-3">
+          <Button
+            onClick={handleClearAll}
+            variant="outline"
+            className="font-mono text-xs font-bold h-9 px-3 border-2 border-red text-red hover:bg-red hover:text-creme rounded-sm"
+          >
+            <Trash2 className="w-3.5 h-3.5 mr-1.5" />
+            CLEAR ALL DATA
+          </Button>
+          <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground text-center">
+            // Session auto-saved to this browser · For educational use · Not a substitute for clinical judgment
           </p>
         </footer>
       </main>
