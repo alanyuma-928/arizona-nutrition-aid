@@ -11,18 +11,25 @@ import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 const Index = () => {
-  const [unit, setUnit] = useState<Unit>("imperial");
-  const [sex, setSex] = useState<Sex>("female");
-  const [heightIn, setHeightIn] = useState(65);
-  const [actualLb, setActualLb] = useState(140);
-  const [kcal, setKcal] = useState(2000);
-  const [fiberG, setFiberG] = useState(15);
-  const [paga, setPaga] = useState<PagaState>({
+  const [unit, setUnit]         = usePersistentState<Unit>(`${CDS_STORAGE_PREFIX}unit`, "imperial");
+  const [sex, setSex]           = usePersistentState<Sex>(`${CDS_STORAGE_PREFIX}sex`, "female");
+  const [heightIn, setHeightIn] = usePersistentState<number>(`${CDS_STORAGE_PREFIX}heightIn`, 65);
+  const [actualLb, setActualLb] = usePersistentState<number>(`${CDS_STORAGE_PREFIX}actualLb`, 140);
+  const [kcal, setKcal]         = usePersistentState<number>(`${CDS_STORAGE_PREFIX}kcal`, 2000);
+  const [fiberG, setFiberG]     = usePersistentState<number>(`${CDS_STORAGE_PREFIX}fiberG`, 15);
+  const [paga, setPaga]         = usePersistentState<PagaState>(`${CDS_STORAGE_PREFIX}paga`, {
     activityMin: 90,
     sedentaryHr: 10,
     resistanceDays: 1,
   });
   const [adimeOpenSignal, setAdimeOpenSignal] = useState(0);
+
+  const handleClearAll = () => {
+    if (!window.confirm("Clear ALL clinical session data from this browser? This cannot be undone.")) return;
+    clearCdsStorage();
+    toast.success("Session cleared. Reloading...");
+    setTimeout(() => window.location.reload(), 400);
+  };
 
   const ibwLb = useMemo(() => hamwiIbwLb(sex, heightIn), [heightIn, sex]);
   const pctIBW = ibwLb && actualLb ? (actualLb / ibwLb) * 100 : 0;
