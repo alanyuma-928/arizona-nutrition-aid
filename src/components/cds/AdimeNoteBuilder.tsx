@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Check, Copy, Download, FileText, Plus, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { ibwCategory, isFiberAdequate, SSoT } from "@/lib/clinicalStandards";
+import { PesGenerator } from "./PesGenerator";
 import type { PagaState } from "./PagaAuditor";
 
 type TabKey = "A" | "D" | "I" | "M" | "E";
