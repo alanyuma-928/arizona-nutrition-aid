@@ -110,9 +110,32 @@ const Index = () => {
             <Trash2 className="w-3.5 h-3.5 mr-1.5" />
             CLEAR ALL DATA
           </Button>
-          <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground text-center">
-            // Session auto-saved to this browser · For educational use · Not a substitute for clinical judgment
-          </p>
+          <div className="max-w-2xl text-center space-y-2">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+              // Session auto-saved to this browser · For educational use · Not a substitute for clinical judgment
+            </p>
+            <p className="font-mono text-[10px] leading-relaxed text-muted-foreground">
+              Open Educational Resource (OER). Content is licensed under{" "}
+              <a
+                href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
+                target="_blank"
+                rel="noopener noreferrer license"
+                className="underline text-navy hover:text-red"
+              >
+                Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
+              </a>
+              . You may share and adapt for non-commercial purposes with attribution; derivatives must use the same license.
+            </p>
+            <p className="font-mono text-[10px] leading-relaxed text-muted-foreground">
+              Clinical references derive from public-domain U.S. federal sources: USDA/HHS{" "}
+              <em>Dietary Guidelines for Americans 2020-2025</em>, USDA <em>MyPlate</em>, HHS{" "}
+              <em>Physical Activity Guidelines for Americans (2nd ed., 2018)</em>, and the Hamwi Method (1964).
+              Third-party trademarks (MyPlate, etc.) belong to their respective owners and are referenced for educational use only.
+            </p>
+            <p className="font-mono text-[10px] tracking-wide text-muted-foreground">
+              © {new Date().getFullYear()} Nutritional Sciences & Wellness Foods Lab · University of Arizona · No PHI is transmitted; all data stays in your browser.
+            </p>
+          </div>
         </footer>
       </main>
     </div>
