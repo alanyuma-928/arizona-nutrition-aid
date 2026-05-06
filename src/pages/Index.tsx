@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { AssessmentBox, Sex, Unit } from "@/components/cds/AssessmentBox";
 import { NutrientAuditor } from "@/components/cds/NutrientAuditor";
 import { AdimeBox } from "@/components/cds/AdimeBox";
+import { AdimeNoteBuilder } from "@/components/cds/AdimeNoteBuilder";
 import { hamwiIbwLb, recommendedFiberG } from "@/lib/clinicalStandards";
 
 const Index = () => {
@@ -57,6 +58,19 @@ const Index = () => {
           fiberG={fiberG}
           recommendedFiber={recommendedFiber}
         />
+
+        <div className="flex justify-center pt-2">
+          <AdimeNoteBuilder
+            sex={sex}
+            heightIn={heightIn}
+            actualLb={actualLb}
+            ibwLb={ibwLb}
+            pctIBW={pctIBW}
+            kcal={kcal}
+            fiberG={fiberG}
+            recommendedFiber={recommendedFiber}
+          />
+        </div>
 
         <footer className="pt-4 pb-8 text-center">
           <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
