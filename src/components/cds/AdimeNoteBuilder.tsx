@@ -309,6 +309,13 @@ and documentation in the patient's medical record.
                   </ul>
                 )}
               </aside>
+
+              <MyPlateGenerator
+                kcal={p.kcal}
+                onExport={(text) =>
+                  setIntervention(prev => (prev ? prev.replace(/\s+$/, "") + "\n\n" : "") + text)
+                }
+              />
             </TabsContent>
 
             {/* MONITORING */}
