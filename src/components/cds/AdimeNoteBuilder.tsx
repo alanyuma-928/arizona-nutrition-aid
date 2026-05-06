@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { usePersistentState, CDS_STORAGE_PREFIX } from "@/lib/usePersistentState";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -65,11 +66,11 @@ function buildPagaSuggestions(paga: PagaState): Suggestion[] {
 export function AdimeNoteBuilder(p: Props) {
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState<TabKey>("A");
-  const [assessment, setAssessment] = useState("");
-  const [diagnosis, setDiagnosis] = useState("");
-  const [intervention, setIntervention] = useState("");
-  const [monitoring, setMonitoring] = useState("");
-  const [evaluation, setEvaluation] = useState("");
+  const [assessment, setAssessment]     = usePersistentState(`${CDS_STORAGE_PREFIX}adime.A`, "");
+  const [diagnosis, setDiagnosis]       = usePersistentState(`${CDS_STORAGE_PREFIX}adime.D`, "");
+  const [intervention, setIntervention] = usePersistentState(`${CDS_STORAGE_PREFIX}adime.I`, "");
+  const [monitoring, setMonitoring]     = usePersistentState(`${CDS_STORAGE_PREFIX}adime.M`, "");
+  const [evaluation, setEvaluation]     = usePersistentState(`${CDS_STORAGE_PREFIX}adime.E`, "");
   const [copied, setCopied] = useState(false);
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
 

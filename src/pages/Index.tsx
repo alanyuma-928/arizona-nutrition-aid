@@ -5,20 +5,31 @@ import { AdimeBox } from "@/components/cds/AdimeBox";
 import { AdimeNoteBuilder } from "@/components/cds/AdimeNoteBuilder";
 import { PagaAuditor, PagaState } from "@/components/cds/PagaAuditor";
 import { hamwiIbwLb, recommendedFiberG } from "@/lib/clinicalStandards";
+import { usePersistentState, CDS_STORAGE_PREFIX, clearCdsStorage } from "@/lib/usePersistentState";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 const Index = () => {
-  const [unit, setUnit] = useState<Unit>("imperial");
-  const [sex, setSex] = useState<Sex>("female");
-  const [heightIn, setHeightIn] = useState(65);
-  const [actualLb, setActualLb] = useState(140);
-  const [kcal, setKcal] = useState(2000);
-  const [fiberG, setFiberG] = useState(15);
-  const [paga, setPaga] = useState<PagaState>({
+  const [unit, setUnit]         = usePersistentState<Unit>(`${CDS_STORAGE_PREFIX}unit`, "imperial");
+  const [sex, setSex]           = usePersistentState<Sex>(`${CDS_STORAGE_PREFIX}sex`, "female");
+  const [heightIn, setHeightIn] = usePersistentState<number>(`${CDS_STORAGE_PREFIX}heightIn`, 65);
+  const [actualLb, setActualLb] = usePersistentState<number>(`${CDS_STORAGE_PREFIX}actualLb`, 140);
+  const [kcal, setKcal]         = usePersistentState<number>(`${CDS_STORAGE_PREFIX}kcal`, 2000);
+  const [fiberG, setFiberG]     = usePersistentState<number>(`${CDS_STORAGE_PREFIX}fiberG`, 15);
+  const [paga, setPaga]         = usePersistentState<PagaState>(`${CDS_STORAGE_PREFIX}paga`, {
     activityMin: 90,
     sedentaryHr: 10,
     resistanceDays: 1,
   });
   const [adimeOpenSignal, setAdimeOpenSignal] = useState(0);
+
+  const handleClearAll = () => {
+    if (!window.confirm("Clear ALL clinical session data from this browser? This cannot be undone.")) return;
+    clearCdsStorage();
+    toast.success("Session cleared. Reloading...");
+    setTimeout(() => window.location.reload(), 400);
+  };
 
   const ibwLb = useMemo(() => hamwiIbwLb(sex, heightIn), [heightIn, sex]);
   const pctIBW = ibwLb && actualLb ? (actualLb / ibwLb) * 100 : 0;
@@ -86,9 +97,17 @@ const Index = () => {
           />
         </div>
 
-        <footer className="pt-4 pb-8 text-center">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            // For educational use · Not a substitute for clinical judgment
+        <footer className="pt-4 pb-8 flex flex-col items-center gap-3">
+          <Button
+            onClick={handleClearAll}
+            variant="outline"
+            className="font-mono text-xs font-bold h-9 px-3 border-2 border-red text-red hover:bg-red hover:text-creme rounded-sm"
+          >
+            <Trash2 className="w-3.5 h-3.5 mr-1.5" />
+            CLEAR ALL DATA
+          </Button>
+          <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground text-center">
+            // Session auto-saved to this browser · For educational use · Not a substitute for clinical judgment
           </p>
         </footer>
       </main>
