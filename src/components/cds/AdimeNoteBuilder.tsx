@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { ibwCategory, isFiberAdequate, SSoT } from "@/lib/clinicalStandards";
 import { PesGenerator } from "./PesGenerator";
 import { ClientEducation } from "./ClientEducation";
+import { MyPlateGenerator } from "./MyPlateGenerator";
 import type { PagaState } from "./PagaAuditor";
 
 type TabKey = "A" | "D" | "I" | "M" | "E" | "C";
@@ -308,6 +309,13 @@ and documentation in the patient's medical record.
                   </ul>
                 )}
               </aside>
+
+              <MyPlateGenerator
+                kcal={p.kcal}
+                onExport={(text) =>
+                  setIntervention(prev => (prev ? prev.replace(/\s+$/, "") + "\n\n" : "") + text)
+                }
+              />
             </TabsContent>
 
             {/* MONITORING */}
