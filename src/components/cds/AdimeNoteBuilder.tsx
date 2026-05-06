@@ -1,11 +1,14 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Check, Copy, Download, FileText, Sparkles } from "lucide-react";
+import { Check, Copy, Download, FileText, Plus, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { ibwCategory, isFiberAdequate, SSoT } from "@/lib/clinicalStandards";
+import type { PagaState } from "./PagaAuditor";
+
+type TabKey = "A" | "D" | "I" | "M" | "E";
 
 interface Props {
   sex: "male" | "female";
@@ -16,9 +19,13 @@ interface Props {
   kcal: number;
   fiberG: number;
   recommendedFiber: number;
+  paga: PagaState;
+  /** Increment to programmatically open the dialog (e.g., from PAGA Export). */
+  openSignal?: number;
+  /** Tab to focus when openSignal changes. */
+  initialTab?: TabKey;
 }
 
-type TabKey = "A" | "D" | "I" | "M" | "E";
 const TABS: { key: TabKey; label: string; full: string }[] = [
   { key: "A", label: "A", full: "Assessment" },
   { key: "D", label: "D", full: "Diagnosis" },
@@ -26,6 +33,31 @@ const TABS: { key: TabKey; label: string; full: string }[] = [
   { key: "M", label: "M", full: "Monitoring" },
   { key: "E", label: "E", full: "Evaluation" },
 ];
+
+interface Suggestion { id: string; text: string; }
+
+function buildPagaSuggestions(paga: PagaState): Suggestion[] {
+  const out: Suggestion[] = [];
+  if (paga.activityMin < SSoT.paga.moderateMinPerWeek) {
+    out.push({
+      id: "low-activity",
+      text: `Prescribe a walking program starting at 10-minute bouts to reach the ${SSoT.paga.moderateMinPerWeek}-minute PAGA threshold.`,
+    });
+  }
+  if (paga.sedentaryHr > SSoT.paga.sedentaryMaxHoursPerDay) {
+    out.push({
+      id: "high-sedentary",
+      text: `Implement a "sit-stand" protocol or 5-minute movement breaks every hour.`,
+    });
+  }
+  if (paga.resistanceDays < SSoT.paga.resistanceMinDaysPerWeek) {
+    out.push({
+      id: "low-resistance",
+      text: `Introduce bodyweight or resistance band exercises targeting major muscle groups.`,
+    });
+  }
+  return out;
+}
 
 export function AdimeNoteBuilder(p: Props) {
   const [open, setOpen] = useState(false);
@@ -36,10 +68,26 @@ export function AdimeNoteBuilder(p: Props) {
   const [monitoring, setMonitoring] = useState("");
   const [evaluation, setEvaluation] = useState("");
   const [copied, setCopied] = useState(false);
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+
+  useEffect(() => {
+    if (p.openSignal && p.openSignal > 0) {
+      setSuggestions(buildPagaSuggestions(p.paga));
+      setTab(p.initialTab ?? "I");
+      setOpen(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [p.openSignal]);
 
   const ibwStatus = p.pctIBW ? ibwCategory(p.pctIBW) : "—";
   const fiberDeficit = p.recommendedFiber - p.fiberG;
   const adequate = isFiberAdequate(p.fiberG, p.recommendedFiber);
+
+  const addSuggestion = (s: Suggestion) => {
+    setIntervention(prev => (prev ? prev.replace(/\s+$/, "") + "\n" : "") + `• ${s.text}`);
+    setSuggestions(prev => prev.filter(x => x.id !== s.id));
+    toast.success("Suggestion added to Intervention");
+  };
 
   const importedAssessment = useMemo(() => {
     return [
@@ -220,8 +268,43 @@ and documentation in the patient's medical record.
                 value={intervention}
                 onChange={e => setIntervention(e.target.value)}
                 placeholder="Narrator: Describe nutrition prescription, education topics (e.g., E-1.1 priority modifications), counseling strategy, and coordination of care. Specify measurable goals (e.g., 'Increase fiber to ≥X g/day over 4 weeks') and any referrals."
-                className="min-h-[260px] font-mono text-sm bg-card text-navy border-2 border-navy/30 focus-visible:border-navy placeholder:text-navy/55"
+                className="min-h-[220px] font-mono text-sm bg-card text-navy border-2 border-navy/30 focus-visible:border-navy placeholder:text-navy/55"
               />
+
+              <aside
+                aria-labelledby="smart-suggestions-heading"
+                className="bg-creme border-2 border-navy/40 rounded-sm p-4 mt-3"
+              >
+                <header className="mb-3">
+                  <h4 id="smart-suggestions-heading" className="font-extrabold text-navy text-sm uppercase tracking-wide">
+                    Clinical Recommendations
+                  </h4>
+                  <p className="font-mono text-[11px] text-navy/70 mt-1 italic">
+                    Narrator: Based on the PAGA Audit, consider the following evidence-based interventions.
+                  </p>
+                </header>
+
+                {suggestions.length === 0 ? (
+                  <p className="font-mono text-xs text-navy/60">
+                    // No outstanding PAGA-flagged suggestions. Run "Export to ADIME" from the PAGA Auditor to refresh.
+                  </p>
+                ) : (
+                  <ul className="space-y-2">
+                    {suggestions.map(s => (
+                      <li key={s.id} className="flex items-start gap-2 bg-card border border-navy/20 rounded-sm p-2.5">
+                        <p className="flex-1 font-mono text-xs text-navy leading-relaxed">{s.text}</p>
+                        <Button
+                          onClick={() => addSuggestion(s)}
+                          aria-label={`Add suggestion: ${s.text}`}
+                          className="bg-navy hover:bg-navy/90 text-creme h-8 w-8 p-0 rounded-sm shrink-0"
+                        >
+                          <Plus className="w-4 h-4" />
+                        </Button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </aside>
             </TabsContent>
 
             {/* MONITORING */}

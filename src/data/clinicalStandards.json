@@ -24,6 +24,12 @@
     "diagnosisCode": "NI-5.8.5",
     "diagnosisLabel": "Inadequate fiber intake"
   },
+  "paga": {
+    "source": "U.S. Dept. of Health and Human Services. Physical Activity Guidelines for Americans, 2nd Ed., 2018.",
+    "moderateMinPerWeek": 150,
+    "sedentaryMaxHoursPerDay": 8,
+    "resistanceMinDaysPerWeek": 2
+  },
   "conversions": {
     "lbPerKg": 2.20462,
     "cmPerIn": 2.54

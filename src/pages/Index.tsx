@@ -3,6 +3,7 @@ import { AssessmentBox, Sex, Unit } from "@/components/cds/AssessmentBox";
 import { NutrientAuditor } from "@/components/cds/NutrientAuditor";
 import { AdimeBox } from "@/components/cds/AdimeBox";
 import { AdimeNoteBuilder } from "@/components/cds/AdimeNoteBuilder";
+import { PagaAuditor, PagaState } from "@/components/cds/PagaAuditor";
 import { hamwiIbwLb, recommendedFiberG } from "@/lib/clinicalStandards";
 
 const Index = () => {
@@ -12,6 +13,12 @@ const Index = () => {
   const [actualLb, setActualLb] = useState(140);
   const [kcal, setKcal] = useState(2000);
   const [fiberG, setFiberG] = useState(15);
+  const [paga, setPaga] = useState<PagaState>({
+    activityMin: 90,
+    sedentaryHr: 10,
+    resistanceDays: 1,
+  });
+  const [adimeOpenSignal, setAdimeOpenSignal] = useState(0);
 
   const ibwLb = useMemo(() => hamwiIbwLb(sex, heightIn), [heightIn, sex]);
   const pctIBW = ibwLb && actualLb ? (actualLb / ibwLb) * 100 : 0;
@@ -48,6 +55,10 @@ const Index = () => {
           kcal={kcal} setKcal={setKcal}
           fiberG={fiberG} setFiberG={setFiberG}
         />
+        <PagaAuditor
+          paga={paga} setPaga={setPaga}
+          onExport={() => setAdimeOpenSignal(s => s + 1)}
+        />
         <AdimeBox
           sex={sex}
           heightIn={heightIn}
@@ -69,6 +80,9 @@ const Index = () => {
             kcal={kcal}
             fiberG={fiberG}
             recommendedFiber={recommendedFiber}
+            paga={paga}
+            openSignal={adimeOpenSignal}
+            initialTab="I"
           />
         </div>
 
