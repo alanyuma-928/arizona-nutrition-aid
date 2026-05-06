@@ -33,5 +33,15 @@
   "conversions": {
     "lbPerKg": 2.20462,
     "cmPerIn": 2.54
+  },
+  "myPlate": {
+    "source": "USDA MyPlate Daily Food Plan, DGA 2020-2025.",
+    "tiers": [
+      { "kcal": 1600, "vegCups": 2.0, "fruitCups": 1.5, "grainsOz": 5, "proteinOz": 5, "dairyCups": 3 },
+      { "kcal": 2000, "vegCups": 2.5, "fruitCups": 2.0, "grainsOz": 6, "proteinOz": 5.5, "dairyCups": 3 },
+      { "kcal": 2400, "vegCups": 3.0, "fruitCups": 2.0, "grainsOz": 8, "proteinOz": 6.5, "dairyCups": 3 },
+      { "kcal": 2800, "vegCups": 3.5, "fruitCups": 2.5, "grainsOz": 10, "proteinOz": 7, "dairyCups": 3 }
+    ],
+    "platePercents": { "veg": 30, "fruit": 20, "grains": 30, "protein": 20 }
   }
 }
