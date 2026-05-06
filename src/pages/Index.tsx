@@ -5,6 +5,10 @@ import { AdimeBox } from "@/components/cds/AdimeBox";
 import { AdimeNoteBuilder } from "@/components/cds/AdimeNoteBuilder";
 import { PagaAuditor, PagaState } from "@/components/cds/PagaAuditor";
 import { hamwiIbwLb, recommendedFiberG } from "@/lib/clinicalStandards";
+import { usePersistentState, CDS_STORAGE_PREFIX, clearCdsStorage } from "@/lib/usePersistentState";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 const Index = () => {
   const [unit, setUnit] = useState<Unit>("imperial");
