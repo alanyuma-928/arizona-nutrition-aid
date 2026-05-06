@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { ibwCategory, isFiberAdequate, SSoT } from "@/lib/clinicalStandards";
 import { PesGenerator } from "./PesGenerator";
 import { ClientEducation } from "./ClientEducation";
+import { MyPlateGenerator } from "./MyPlateGenerator";
 import type { PagaState } from "./PagaAuditor";
 
 type TabKey = "A" | "D" | "I" | "M" | "E" | "C";
