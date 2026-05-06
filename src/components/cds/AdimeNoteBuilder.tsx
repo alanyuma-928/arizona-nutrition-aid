@@ -268,8 +268,43 @@ and documentation in the patient's medical record.
                 value={intervention}
                 onChange={e => setIntervention(e.target.value)}
                 placeholder="Narrator: Describe nutrition prescription, education topics (e.g., E-1.1 priority modifications), counseling strategy, and coordination of care. Specify measurable goals (e.g., 'Increase fiber to ≥X g/day over 4 weeks') and any referrals."
-                className="min-h-[260px] font-mono text-sm bg-card text-navy border-2 border-navy/30 focus-visible:border-navy placeholder:text-navy/55"
+                className="min-h-[220px] font-mono text-sm bg-card text-navy border-2 border-navy/30 focus-visible:border-navy placeholder:text-navy/55"
               />
+
+              <aside
+                aria-labelledby="smart-suggestions-heading"
+                className="bg-creme border-2 border-navy/40 rounded-sm p-4 mt-3"
+              >
+                <header className="mb-3">
+                  <h4 id="smart-suggestions-heading" className="font-extrabold text-navy text-sm uppercase tracking-wide">
+                    Clinical Recommendations
+                  </h4>
+                  <p className="font-mono text-[11px] text-navy/70 mt-1 italic">
+                    Narrator: Based on the PAGA Audit, consider the following evidence-based interventions.
+                  </p>
+                </header>
+
+                {suggestions.length === 0 ? (
+                  <p className="font-mono text-xs text-navy/60">
+                    // No outstanding PAGA-flagged suggestions. Run "Export to ADIME" from the PAGA Auditor to refresh.
+                  </p>
+                ) : (
+                  <ul className="space-y-2">
+                    {suggestions.map(s => (
+                      <li key={s.id} className="flex items-start gap-2 bg-card border border-navy/20 rounded-sm p-2.5">
+                        <p className="flex-1 font-mono text-xs text-navy leading-relaxed">{s.text}</p>
+                        <Button
+                          onClick={() => addSuggestion(s)}
+                          aria-label={`Add suggestion: ${s.text}`}
+                          className="bg-navy hover:bg-navy/90 text-creme h-8 w-8 p-0 rounded-sm shrink-0"
+                        >
+                          <Plus className="w-4 h-4" />
+                        </Button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </aside>
             </TabsContent>
 
             {/* MONITORING */}
