@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Check, Copy, Download, FileText, Plus, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { ibwCategory, isFiberAdequate, SSoT } from "@/lib/clinicalStandards";
+import { PesGenerator } from "./PesGenerator";
 import type { PagaState } from "./PagaAuditor";
 
 type TabKey = "A" | "D" | "I" | "M" | "E";
@@ -246,13 +247,12 @@ and documentation in the patient's medical record.
             {/* DIAGNOSIS */}
             <TabsContent value="D" className="mt-5 space-y-3">
               <StepHeader title="Diagnosis" subtitle="PES Statement — Problem related to Etiology as evidenced by Signs/Symptoms." />
-              <Button
-                onClick={generatePES}
-                className="bg-red hover:bg-red/90 text-creme font-mono text-xs font-bold h-10 rounded-sm"
-              >
-                <Sparkles className="w-4 h-4 mr-1.5" />
-                LAUNCH PES STATEMENT GENERATOR
-              </Button>
+              <PesGenerator
+                fiberG={p.fiberG}
+                recommendedFiber={p.recommendedFiber}
+                paga={p.paga}
+                onAccept={(s) => setDiagnosis(s)}
+              />
               <Textarea
                 value={diagnosis}
                 onChange={e => setDiagnosis(e.target.value)}
