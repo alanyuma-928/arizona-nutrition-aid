@@ -266,13 +266,21 @@ and documentation in the patient's medical record.
                 NEXT →
               </Button>
             </div>
-            <Button
-              onClick={handleCopy}
-              className="bg-navy hover:bg-navy/90 text-creme font-mono text-xs font-bold h-10 px-4 rounded-sm"
-            >
-              {copied ? <Check className="w-4 h-4 mr-1.5" /> : <Copy className="w-4 h-4 mr-1.5" />}
-              {copied ? "COPIED FULL NOTE" : "COPY FULL ADIME NOTE"}
-            </Button>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                onClick={handleCopy}
+                className="bg-navy hover:bg-navy/90 text-creme font-mono text-xs font-bold h-10 px-4 rounded-sm"
+              >
+                {copied ? <Check className="w-4 h-4 mr-1.5" /> : <Copy className="w-4 h-4 mr-1.5" />}
+                {copied ? "COPIED FULL NOTE" : "COPY FULL ADIME NOTE"}
+              </Button>
+              <Button
+                onClick={() => setOpen(false)}
+                className="bg-red hover:bg-red/90 text-creme font-mono text-xs font-bold h-10 px-4 rounded-sm"
+              >
+                ✓ DONE — RETURN TO DASHBOARD
+              </Button>
+            </div>
           </footer>
         </article>
       </DialogContent>
