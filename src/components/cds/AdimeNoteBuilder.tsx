@@ -9,7 +9,7 @@ import { ibwCategory, isFiberAdequate, SSoT } from "@/lib/clinicalStandards";
 import { PesGenerator } from "./PesGenerator";
 import type { PagaState } from "./PagaAuditor";
 
-type TabKey = "A" | "D" | "I" | "M" | "E";
+type TabKey = "A" | "D" | "I" | "M" | "E" | "C";
 
 interface Props {
   sex: "male" | "female";
@@ -33,6 +33,7 @@ const TABS: { key: TabKey; label: string; full: string }[] = [
   { key: "I", label: "I", full: "Intervention" },
   { key: "M", label: "M", full: "Monitoring" },
   { key: "E", label: "E", full: "Evaluation" },
+  { key: "C", label: "C", full: "Client Ed" },
 ];
 
 interface Suggestion { id: string; text: string; }
