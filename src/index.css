@@ -76,4 +76,7 @@
   .label-mono {
     @apply font-mono text-[11px] uppercase tracking-[0.15em] text-muted-foreground font-bold;
   }
+  .theme-pes-preview {
+    box-shadow: var(--shadow-clinical);
+  }
 }
